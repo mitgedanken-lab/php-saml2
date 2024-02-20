@@ -6,7 +6,7 @@ namespace SimpleSAML\Test\SAML2\Signature;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Mockery\MockInterface;
+use Mockery\LegacyMockInterface;
 use Psr\Log\NullLogger;
 use SimpleSAML\SAML2\Certificate\Key;
 use SimpleSAML\SAML2\Certificate\KeyCollection;
@@ -19,6 +19,7 @@ use SimpleSAML\SAML2\XML\samlp\Response;
 use SimpleSAML\TestUtils\SimpleTestLogger;
 use SimpleSAML\XML\DOMDocumentFactory;
 use SimpleSAML\XMLSecurity\TestUtils\PEMCertificatesMock;
+use SimpleSAML\XMLSecurity\XML\SignedElementInterface;
 
 /**
  * @covers \SimpleSAML\SAML2\Signature\PublicKeyValidator
@@ -26,19 +27,19 @@ use SimpleSAML\XMLSecurity\TestUtils\PEMCertificatesMock;
  */
 final class PublicKeyValidatorTest extends MockeryTestCase
 {
-    /** @var \Mockery\MockInterface */
-    private MockInterface $mockSignedElement;
+    /** @var \SimpleSAML\XMLSecurity\XML\SignedElementInterface */
+    private SignedElementInterface $mockSignedElement;
 
-    /** @var \Mockery\MockInterface */
-    private MockInterface $mockConfiguration;
+    /** @var \SimpleSAML\SAML2\Configuration\CertificateProvider */
+    private CertificateProvider $mockConfiguration;
 
 
     /**
      */
     public function setUp(): void
     {
-        $this->mockConfiguration = Mockery::mock(CertificateProvider::class);
-        $this->mockSignedElement = Mockery::mock(AbstractMessage::class);
+        $this->mockConfiguration = $this->createMock(CertificateProvider::class);
+        $this->mockSignedElement = $this->createMock(AbstractMessage::class);
     }
 
 
@@ -114,14 +115,8 @@ final class PublicKeyValidatorTest extends MockeryTestCase
     }
 
 
-    /**
-     * @return \SimpleSAML\SAML2\Certificate\KeyLoader
-     */
     private function prepareKeyLoader($returnValue)
     {
-        return Mockery::mock(KeyLoader::class)
-            ->shouldReceive('extractPublicKeys')
-            ->andReturn($returnValue)
-            ->getMock();
+        return $this->createMock(KeyLoader::class)->method('extractPublicKeys')->willReturn($returnValue);
     }
 }

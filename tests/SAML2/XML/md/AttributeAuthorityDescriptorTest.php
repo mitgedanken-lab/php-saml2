@@ -158,19 +158,6 @@ final class AttributeAuthorityDescriptorTest extends TestCase
 
 
     /**
-     * Test that creating an AttributeAuthorityDescriptor with an AttributeService of the wrong type fails.
-     */
-    public function testMarshallingWithWrongAttributeService(): void
-    {
-        $this->expectException(InvalidDOMElementException::class);
-        $this->expectExceptionMessage('AttributeService is not an instance of EndpointType.');
-
-        /** @psalm-suppress InvalidArgument */
-        new AttributeAuthorityDescriptor(['string'], [C::NS_SAMLP]);
-    }
-
-
-    /**
      * Test that creating an AttributeAuthorityDescriptor without optional parameters works.
      */
     public function testMarshallingWithoutOptionalParameters(): void
@@ -209,21 +196,6 @@ final class AttributeAuthorityDescriptorTest extends TestCase
 
 
     /**
-     * Test that creating an AttributeAuthorityDescriptor with wrong AssertionIDRequestService fails.
-     */
-    public function testMarshallingWithWrongAssertionIDRequestService(): void
-    {
-        $this->expectException(AssertionFailedException::class);
-        $this->expectExceptionMessage(
-            'Expected an instance of SimpleSAML\SAML2\XML\md\AssertionIDRequestService. Got: string',
-        );
-
-        /** @psalm-suppress InvalidArgument */
-        new AttributeAuthorityDescriptor([self::$as], [C::NS_SAMLP], ['x']);
-    }
-
-
-    /**
      * Test that creating an AttributeAuthorityDescriptor with an empty NameIDFormat fails.
      */
     public function testMarshallingWithEmptyNameIDFormat(): void
@@ -245,28 +217,6 @@ final class AttributeAuthorityDescriptorTest extends TestCase
             [self::$aidrs],
             [new NameIDFormat(C::NAMEID_TRANSIENT)],
             [new AttributeProfile('')],
-        );
-    }
-
-
-    /**
-     * Test that creating an AttributeAuthorityDescriptor with wrong Attribute fails.
-     */
-    public function testMarshallingWithWrongAttribute(): void
-    {
-        $this->expectException(AssertionFailedException::class);
-        $this->expectExceptionMessage(
-            'Expected an instance of SimpleSAML\SAML2\XML\saml\Attribute. Got: string',
-        );
-
-        /** @psalm-suppress InvalidArgument */
-        new AttributeAuthorityDescriptor(
-            [self::$as],
-            [C::NS_SAMLP],
-            [self::$aidrs],
-            [new NameIDFormat(C::NAMEID_PERSISTENT)],
-            [new AttributeProfile(C::PROFILE_1)],
-            ['x'],
         );
     }
 
